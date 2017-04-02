@@ -29,7 +29,7 @@ public static String greetingMessage = "Hello World!";
 
 This creates a property with name "greetingMessage" and default value "Hello World!". Note that
 the field has to be static if specified in the class annotated with `@Config`. This will be explained
-in a section down bellow (see Subcategories).
+in a section down bellow (see Advanced Configuration Classes).
 The current value of your property will be written to the corresponding variable after syncronization.
 
 There are various annotations to customize your properties.
@@ -65,9 +65,13 @@ If you wish to disable this, you need to provide a custom `IModGuiFactory` in th
 
 By default, if you have only one configuration class, you will be provided with a config gui containing all of them sorted
 alphabeticaly.
+![The alphabetically sorted properties](./propertyList.PNG "Property list")
+
 If you have more than one configuration class, you will get an alphabetically sorted button list providing access to these
-properties.
+categories.
 The buttons will be named according to your `@LangKey` annotations.
+![A list of categories](./classList.PNG "Category list")
+
 
 Advanced Configuration Classes
 ------------------------------
@@ -77,3 +81,28 @@ keys and information regarding changes and required restarts.
 If you whish to create a subcategory, you can create an object whose super class is `java.lang.Object`. In it, you can create non-static,
 but public fields with the same annotations as above. If there is a field in your configuration class containing such an object,
 it will be used as a subcategory, and the fields customizations will be applied to the subcategory. 
+
+The following is an example copied from the ConfigTest testmod in forge:
+
+````java
+@LangKey("config_test.config.subcats")
+@Config(modid = MODID, name = MODID + "_subcats", category = "")
+public static class CONFIG_SUBCATS {
+    @Name("test_a")
+    public static SubCat sub1 = new SubCat("Hello");
+
+    @Name("test_b")
+    public static SubCat sub2 = new SubCat("Goodbye");
+
+    public static class SubCat {
+        @Name("i_say")
+        public String value;
+       
+        public SubCat(String value) {
+            this.value = value;
+        }
+    }
+}
+````
+
+This will create two categories in this configuration file. "test_a" and "test_b". Each of them contain a seperate property called "i_say".
